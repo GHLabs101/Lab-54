@@ -1,0 +1,38 @@
+name: Lab 54 - Log Demo
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  produce-logs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Start grouped section
+        run: |
+          echo "::group::Environment Snapshot"
+          echo "EVENT=${{ github.event_name }}"
+          echo "REF=${{ github.ref }}"
+          echo "RUN_ID=${{ github.run_id }}"
+          echo "RUN_NUMBER=${{ github.run_number }}"
+          uname -a
+          date -u
+          echo "::endgroup::"
+
+      - name: Verbose commands
+        shell: bash
+        run: |
+          set -euxo pipefail
+          echo "Simulating work…"
+          for i in 1 2 3; do
+            echo "Log line $i"
+            sleep 1
+          done
+
+      - name: Final notes
+        run: |
+          echo "This step ends the demo run and produces enough logs to fetch."
